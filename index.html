@@ -131,24 +131,21 @@
 
       result.textContent = "メニューを考え中…少々お待ちください";
 
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: "あなたは料理が得意でおしゃれなAIです。食材や気分から食事のメニューとレシピ(材料含む)を提案してください。必ず改行や箇条書きなどを使って読みやすく段落分けしてください。" },
-            { role: "user", content: input }
-          ]
-        })
-      });
+      try {
+        const response = await fetch("/.netlify/functions/getMealSuggestion", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ userInput: input })
+        });
 
-      const data = await response.json();
-      const aiReply = data.choices?.[0]?.message?.content || "メニューが思いつかなかったみたい…😢";
-      result.textContent = aiReply;
+        const data = await response.json();
+        const aiReply = data.reply || "メニューが思いつかなかったみたい…😢";
+        result.textContent = aiReply;
+      } catch (error) {
+        result.textContent = "エラーが発生しました🥲";
+      }
     }
 
     function clearResult() {
@@ -156,6 +153,5 @@
       document.getElementById("result").textContent = "今日のおすすめメニューを考えます🤔";
     }
   </script>
-  <script src="config.js"></script>
 </body>
 </html>
