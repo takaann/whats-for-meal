@@ -152,7 +152,7 @@
         result.textContent = "なにか入力してください🍽";
         return;
       }
-      result.textContent = "メニューを考え中…少々お待ちください";
+      result.textContent = "メニューを考えています...🤔";
       try {
         const response = await fetch("/.netlify/functions/getMealSuggestion", {
           method: "POST",
