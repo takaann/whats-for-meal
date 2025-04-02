@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>What’s for Meal?</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
@@ -14,8 +15,9 @@
       background-size: cover;
       color: #333;
       padding: 2rem;
-      max-width: 600px;
       margin: auto;
+      max-width: 800px;
+      box-sizing: border-box;
     }
 
     body::before {
@@ -35,10 +37,12 @@
       font-size: 2.5rem;
       margin-bottom: 0.5rem;
       letter-spacing: 0.05em;
-      position: relative;
       background-color: rgba(255, 255, 255, 0.7);
       padding: 0.5rem 1rem;
       border-radius: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     h1::before, h1::after {
@@ -48,10 +52,17 @@
       font-size: 1.5rem;
     }
 
+    .food-icons {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
     .input-area {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1rem;
+      flex-wrap: nowrap;
     }
 
     input[type="text"] {
@@ -60,6 +71,11 @@
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 0.5rem;
     }
 
     button {
@@ -81,14 +97,7 @@
     }
 
     button i {
-      font-size: 1.2rem;
-      color: #5a4e42;
-    }
-
-    .button-area {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      margin-right: 0.3rem;
     }
 
     #result {
@@ -102,21 +111,50 @@
       line-height: 1.6;
     }
 
-    .food-icons {
-      text-align: center;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
+    /* ▼ スマホ対応（600px以下） */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8rem;
+        padding: 0.4rem 0.6rem;
+        line-height: 1.2;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      h1::before,
+      h1::after {
+        font-size: 1.2rem;
+      }
+
+      .input-area {
+        flex-direction: column;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
   <h1>🍴What’s for Meal?🍴</h1>
-  <div class="food-icons">🥐🧈🥗🍷🥩</div>
+  <div class="food-icons">🥐📚🥗🍷🥩</div>
+
   <div class="input-area">
     <input type="text" id="userInput" placeholder="食材や気分を入力してください">
-    <button onclick="suggestMeal()"><i class="fas fa-search"></i></button>
-    <button onclick="clearResult()">クリア</button>
+    <div class="buttons">
+      <button onclick="suggestMeal()"><i class="fas fa-search"></i>検索</button>
+      <button onclick="clearResult()">クリア</button>
+    </div>
   </div>
+
   <div id="result">今日のおすすめメニューを考えます🤔</div>
 
   <script>
