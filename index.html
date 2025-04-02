@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>What’s for Meal?</title>
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
     body {
@@ -18,7 +16,7 @@
       margin: auto;
       max-width: 800px;
       box-sizing: border-box;
-      min-height: 100vh; /* 追加：背景が切れるのを防ぐ */
+      min-height: 100vh;
     }
 
     body::before {
@@ -35,7 +33,7 @@
     h1 {
       text-align: center;
       color: #5a4e42;
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       margin-bottom: 0.5rem;
       letter-spacing: 0.05em;
       background-color: rgba(255, 255, 255, 0.7);
@@ -44,6 +42,8 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     h1::before, h1::after {
@@ -114,10 +114,11 @@
 
     @media (max-width: 600px) {
       h1 {
-        font-size: 1.8rem;
-        padding: 0.4rem 0.6rem;
-        line-height: 1.2;
-        word-break: keep-all;
+        font-size: 1.6rem;
+        padding: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       h1::before,
@@ -175,6 +176,7 @@
         result.textContent = "エラーが発生しました🥲";
       }
     }
+
     function clearResult() {
       document.getElementById("userInput").value = "";
       document.getElementById("result").textContent = "今日のおすすめメニューを考えます🤔";
