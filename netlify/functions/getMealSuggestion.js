@@ -53,36 +53,31 @@ exports.handler = async function (event) {
     };
   }
 
-  const raw = data.choices?.[0]?.message?.content || "メニューが思いつかなかったみたい…😢";
+  const raw =
+    data.choices?.[0]?.message?.content ||
+    "メニューが思いつかなかったみたい…😢";
 
   const formatReply = (text) => {
-    const lines = text.trim().split('\n');
-    let result = '';
+    const bodyText = text.trim();
 
-    const firstLine = lines[0]?.trim();
-    let menuName = '';
-    if (firstLine) {
-      menuName = firstLine.replace(/^[#＊*]+/, '')
-                          .replace(/^メニュー[:：]?\s*/, '')
-                          .replace(/^名[:：]?\s*/, '')
-                          .trim();
-      result += `<div class="menu-title">🍽 メニュー<br>${menuName}</div>\n`;
-      lines.shift();
-    }
+    const materialPattern =
+      /(?:###\s*|[*＊]{2})?材料[:：]?\s*([\s\S]*?)(?=\n(?:###\s*|[*＊]{2})?レシピ|$)/gi;
+    const recipePattern =
+      /(?:###\s*|[*＊]{2})?レシピ[:：]?\s*([\s\S]*?)(?=(?:\n(?:###\s*|[*＊]{2})?(材料|メニュー)|$))/gi;
 
-    const bodyText = lines.join('\n');
+    let result = bodyText;
 
-    const materialPattern = /(?:###\s*|[*＊]{2})?材料[:：]?\s*([\s\S]*?)(?=\n(?:###\s*|[*＊]{2})?レシピ|$)/i;
-    const materialMatch = bodyText.match(materialPattern);
-    if (materialMatch) {
-      result += `<div class="ingredients"><strong>材料</strong><br>${materialMatch[1].trim().replace(/\n/g, '<br>')}</div>\n`;
-    }
+    result = result.replace(materialPattern, (match, p1) => {
+      return `<div class="ingredients"><strong>材料</strong><br>${p1
+        .trim()
+        .replace(/\n/g, "<br>")}</div>`;
+    });
 
-    const recipePattern = /(?:###\s*|[*＊]{2})?レシピ[:：]?\s*([\s\S]*)/i;
-    const recipeMatch = bodyText.match(recipePattern);
-    if (recipeMatch) {
-      result += `<div class="recipe"><strong>レシピ</strong><br>${recipeMatch[1].trim().replace(/\n/g, '<br>')}</div>\n`;
-    }
+    result = result.replace(recipePattern, (match, p1) => {
+      return `<div class="recipe"><strong>レシピ</strong><br>${p1
+        .trim()
+        .replace(/\n/g, "<br>")}</div>`;
+    });
 
     return result;
   };
