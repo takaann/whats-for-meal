@@ -65,40 +65,9 @@ exports.handler = async function (event) {
     };
   }
 
-<<<<<<< HEAD
-  const raw =
-    data.choices?.[0]?.message?.content ||
-    "メニューが思いつかなかったみたい…😢";
-
-  const formatReply = (text) => {
-    const bodyText = text.trim();
-
-    const materialPattern =
-      /(?:###\s*|[*＊]{2})?材料[:：]?\s*([\s\S]*?)(?=\n(?:###\s*|[*＊]{2})?レシピ|$)/gi;
-    const recipePattern =
-      /(?:###\s*|[*＊]{2})?レシピ[:：]?\s*([\s\S]*?)(?=(?:\n(?:###\s*|[*＊]{2})?(材料|メニュー)|$))/gi;
-
-    let result = bodyText;
-
-    result = result.replace(materialPattern, (match, p1) => {
-      return `<div class="ingredients"><strong>材料</strong><br>${p1
-        .trim()
-        .replace(/\n/g, "<br>")}</div>`;
-    });
-
-    result = result.replace(recipePattern, (match, p1) => {
-      return `<div class="recipe"><strong>レシピ</strong><br>${p1
-        .trim()
-        .replace(/\n/g, "<br>")}</div>`;
-    });
-
-    return result;
-  };
-=======
   const reply =
     data.choices?.[0]?.message?.content ||
     "メニューが思いつかなかったみたい…😢";
->>>>>>> parent of 24e7915 (レスポンスの内容色分け②)
 
   return {
     statusCode: 200,
