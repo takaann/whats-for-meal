@@ -1,7 +1,6 @@
 async function suggestMeal() {
   const input = document.getElementById("userInput").value;
   const result = document.getElementById("result");
-  const historyList = document.getElementById("history");
   const searchBtn = document.getElementById("searchButton");
 
   if (!input.trim()) {
@@ -28,18 +27,11 @@ async function suggestMeal() {
     const rawReply = data.reply;
 
     const highlightedReply = rawReply
-      .replace(
-        /\u3010主菜\u3011/g,
-        '<span class="highlight-main">【主菜】</span>'
-      )
-      .replace(
-        /\u3010副菜\u3011/g,
-        '<span class="highlight-side">【副菜】</span>'
-      );
+      .replace(/\u3010主菜\u3011/g, '<span class="highlight-main">【主菜】</span>')
+      .replace(/\u3010副菜\u3011/g, '<span class="highlight-side">【副菜】</span>');
 
     result.innerHTML = highlightedReply;
 
-    // 履歴保存処理
     const newEntry = {
       input,
       reply: highlightedReply,
@@ -80,7 +72,7 @@ function renderHistory() {
   try {
     const saved = localStorage.getItem("mealHistory");
     const history = saved ? JSON.parse(saved) : [];
-    history.forEach((entry, index) => {
+    history.forEach((entry) => {
       const item = document.createElement("div");
       item.className = "history-entry";
       item.innerHTML = `<div class="history-input">▶ ${entry.input}</div><div class="history-reply">${entry.reply}</div>`;
@@ -91,10 +83,14 @@ function renderHistory() {
   }
 }
 
+function clearHistory() {
+  localStorage.removeItem("mealHistory");
+  renderHistory();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderHistory();
-  document
-    .getElementById("searchButton")
-    .addEventListener("click", suggestMeal);
+  document.getElementById("searchButton").addEventListener("click", suggestMeal);
   document.getElementById("clearButton").addEventListener("click", clearResult);
+  document.getElementById("clearHistoryButton").addEventListener("click", clearHistory);
 });
