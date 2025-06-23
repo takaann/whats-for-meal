@@ -2,7 +2,7 @@ async function suggestMeal() {
   const input = document.getElementById("userInput").value;
   const result = document.getElementById("result");
   const historyList = document.getElementById("history");
-  const searchBtn = document.getElementById("searchBtn");
+  const searchBtn = document.getElementById("searchButton");
 
   if (!input.trim()) {
     result.textContent = "なにか入力してください🍽";
@@ -91,4 +91,10 @@ function renderHistory() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", renderHistory);
+document.addEventListener("DOMContentLoaded", () => {
+  renderHistory();
+  document
+    .getElementById("searchButton")
+    .addEventListener("click", suggestMeal);
+  document.getElementById("clearButton").addEventListener("click", clearResult);
+});
