@@ -76,6 +76,7 @@ async function suggestMeal() {
 // 🔄 入力欄・結果欄をリセットする処理
 function clearResult() {
   document.getElementById("userInput").value = ""; // 入力欄を空に
+  document.getElementById("allergy-options").value = "";
   document.getElementById("result").textContent =
     "今日のおすすめメニューを考えます🤔"; // 初期メッセージに戻す
 }
