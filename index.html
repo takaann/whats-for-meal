@@ -159,7 +159,11 @@
           border: 1px solid #ccc;
         "
       />
-      <!-- アレルギー選択 -->
+      <div class="buttons">
+        <button id="searchButton"><i class="fas fa-search"></i>検索</button>
+        <button id="clearButton">クリア</button>
+      </div>
+            <!-- アレルギー選択 -->
       <div
         id="allergy-options"
         style="display: flex; flex-wrap: wrap; gap: 8px"
@@ -182,10 +186,6 @@
         <label
           ><input type="checkbox" name="allergy" value="落花生" /> 落花生</label
         >
-      </div>
-      <div class="buttons">
-        <button id="searchButton"><i class="fas fa-search"></i>検索</button>
-        <button id="clearButton">クリア</button>
       </div>
     </div>
     <div id="result">今日のおすすめメニューを考えます🤔</div>
