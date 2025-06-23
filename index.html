@@ -120,6 +120,33 @@
         border-radius: 10px;
         margin-bottom: 1rem;
       }
+      #allergy-options {
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+        flex-direction: column;
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      #allergy-options p {
+        margin: 0;
+        font-weight: bold;
+        color: #5a4e42;
+      }
+
+      #allergy-options label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-weight: normal;
+        background-color: rgba(255, 255, 255, 0.85);
+        padding: 0.2rem 0.5rem;
+        border-radius: 5px;
+      }
+
       @media (max-width: 600px) {
         .input-area {
           flex-direction: column;
@@ -163,29 +190,29 @@
         <button id="searchButton"><i class="fas fa-search"></i>検索</button>
         <button id="clearButton">クリア</button>
       </div>
-            <!-- アレルギー選択 -->
-      <div
-        id="allergy-options"
-        style="display: flex; flex-wrap: wrap; gap: 8px"
-      >
-        <p style="width: 100%">⚠️ アレルゲンを避けたい場合は選んでください：</p>
-        <label><input type="checkbox" name="allergy" value="卵" /> 卵</label>
-        <label><input type="checkbox" name="allergy" value="乳" /> 乳</label>
-        <label
-          ><input type="checkbox" name="allergy" value="小麦" /> 小麦</label
-        >
-        <label
-          ><input type="checkbox" name="allergy" value="えび" /> えび</label
-        >
-        <label
-          ><input type="checkbox" name="allergy" value="かに" /> かに</label
-        >
-        <label
-          ><input type="checkbox" name="allergy" value="そば" /> そば</label
-        >
-        <label
-          ><input type="checkbox" name="allergy" value="落花生" /> 落花生</label
-        >
+      <!-- アレルギー選択 -->
+      <div id="allergy-options">
+        <p>⚠️ アレルゲンを避けたい場合は選んでください：</p>
+        <div class="allergy-checkboxes">
+          <label><input type="checkbox" name="allergy" value="卵" /> 卵</label>
+          <label><input type="checkbox" name="allergy" value="乳" /> 乳</label>
+          <label
+            ><input type="checkbox" name="allergy" value="小麦" /> 小麦</label
+          >
+          <label
+            ><input type="checkbox" name="allergy" value="えび" /> えび</label
+          >
+          <label
+            ><input type="checkbox" name="allergy" value="かに" /> かに</label
+          >
+          <label
+            ><input type="checkbox" name="allergy" value="そば" /> そば</label
+          >
+          <label
+            ><input type="checkbox" name="allergy" value="落花生" />
+            落花生</label
+          >
+        </div>
       </div>
     </div>
     <div id="result">今日のおすすめメニューを考えます🤔</div>
