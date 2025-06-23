@@ -148,8 +148,10 @@
         placeholder="食材や気分を入力してください"
       />
       <div class="buttons">
-        <button id="searchButton"><i class="fas fa-search"></i>検索</button>
-        <button id="clearButton">クリア</button>
+        <button onclick="suggestMeal()">
+          <i class="fas fa-search"></i>検索
+        </button>
+        <button onclick="clearResult()">クリア</button>
       </div>
     </div>
     <div id="result">今日のおすすめメニューを考えます🤔</div>
