@@ -2,7 +2,7 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 exports.handler = async function (event) {
-  const { userInput, calorieLimit } = JSON.parse(event.body);
+  const { userInput, calorieLimit, allergies } = JSON.parse(event.body);
 
   const apiKey = process.env.OPENAI_API_KEY;
 
@@ -20,10 +20,10 @@ exports.handler = async function (event) {
 【主菜】◯◯◯（料理名のみ）
 【カロリー】◯◯kcal（目安）
 【材料】
-- ○○ ○個          
+- ○○ ○個
 - △△ 大さじ1
 ...
-【レシピ】          
+【レシピ】
 1. ...
 2. ...
 ...
@@ -40,20 +40,25 @@ exports.handler = async function (event) {
 ...
 【カロリー合計】◯◯kcal（目安）
 
-
 【制約】
-  - 主菜と副菜の両方に、できるだけ入力された食材を活用すること
-  - ただし、同じ食材を主菜と副菜の両方で使うのは1品以内に留めること（被りすぎないように工夫する）
-  - ユーザーが入力していない食材は使わないこと（調味料を除く）
-  - ユーザーが食材を指定しなかった場合は、「気分や季節感」に合った定番の主菜と副菜を提案すること
-  - 出力はすべて日本語で、カジュアルで親しみやすい表現にすること
-  - 前置きや説明は不要。レシピのみを出力すること
-  - 主菜・副菜それぞれのカロリー（目安）と、最後に合計カロリーを必ず記載すること
+- 主菜と副菜の両方に、できるだけ入力された食材を活用すること
+- ただし、同じ食材を主菜と副菜の両方で使うのは1品以内に留めること（被りすぎないように工夫する）
+- ユーザーが入力していない食材は使わないこと（調味料を除く）
+- ユーザーが食材を指定しなかった場合は、「気分や季節感」に合った定番の主菜と副菜を提案すること
+- 出力はすべて日本語で、カジュアルで親しみやすい表現にすること
+- 前置きや説明は不要。レシピのみを出力すること
+- 主菜・副菜それぞれのカロリー（目安）と、最後に合計カロリーを必ず記載すること
 `.trim();
 
-  // カロリー制限がある場合は追記
+  // オプション条件の追加
   if (calorieLimit && calorieLimit.trim() !== "") {
-    systemPrompt += `\n  - 合計カロリーはできるだけ${calorieLimit}kcal以内に抑えること`;
+    systemPrompt += `\n- 合計カロリーはできるだけ${calorieLimit}kcal以内に抑えること`;
+  }
+
+  if (allergies && Array.isArray(allergies) && allergies.length > 0) {
+    systemPrompt += `\n- 以下のアレルゲンを含む食材を使用しないこと：${allergies.join(
+      "、"
+    )}`;
   }
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {

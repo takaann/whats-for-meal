@@ -159,6 +159,30 @@
           border: 1px solid #ccc;
         "
       />
+      <!-- アレルギー選択 -->
+      <div
+        id="allergy-options"
+        style="display: flex; flex-wrap: wrap; gap: 8px"
+      >
+        <p style="width: 100%">⚠️ アレルゲンを避けたい場合は選んでください：</p>
+        <label><input type="checkbox" name="allergy" value="卵" /> 卵</label>
+        <label><input type="checkbox" name="allergy" value="乳" /> 乳</label>
+        <label
+          ><input type="checkbox" name="allergy" value="小麦" /> 小麦</label
+        >
+        <label
+          ><input type="checkbox" name="allergy" value="えび" /> えび</label
+        >
+        <label
+          ><input type="checkbox" name="allergy" value="かに" /> かに</label
+        >
+        <label
+          ><input type="checkbox" name="allergy" value="そば" /> そば</label
+        >
+        <label
+          ><input type="checkbox" name="allergy" value="落花生" /> 落花生</label
+        >
+      </div>
       <div class="buttons">
         <button id="searchButton"><i class="fas fa-search"></i>検索</button>
         <button id="clearButton">クリア</button>
