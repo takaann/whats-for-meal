@@ -45,8 +45,8 @@ async function suggestMeal() {
 
     // 🌟 履歴データの構築
     const newEntry = {
-      input,                      // 入力内容
-      reply: highlightedReply,   // 強調済み返信
+      input, // 入力内容
+      reply: highlightedReply, // 強調済み返信
       timestamp: new Date().toISOString(), // タイムスタンプ
     };
 
@@ -76,7 +76,13 @@ async function suggestMeal() {
 // 🔄 入力欄・結果欄をリセットする処理
 function clearResult() {
   document.getElementById("userInput").value = ""; // 入力欄を空に
-  document.getElementById("allergy-options").value = "";
+  document.getElementById("calorieInput").value = "";
+
+  // チェックボックスをすべて未選択に
+  const checkboxes = document.querySelectorAll('input[name="allergy"]:checked');
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = false;
+  });
   document.getElementById("result").textContent =
     "今日のおすすめメニューを考えます🤔"; // 初期メッセージに戻す
 }
@@ -129,7 +135,5 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("searchButton")
     .addEventListener("click", suggestMeal); // 検索ボタン設定
-  document
-    .getElementById("clearButton")
-    .addEventListener("click", clearResult); // クリアボタン設定
+  document.getElementById("clearButton").addEventListener("click", clearResult); // クリアボタン設定
 });
