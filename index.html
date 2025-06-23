@@ -133,6 +133,15 @@
         font-size: 1.1rem;
         line-height: 1.6;
       }
+      .highlight-main {
+        color: #d9534f; /* 主菜：赤系 */
+        font-weight: bold;
+      }
+
+      .highlight-side {
+        color: #5cb85c; /* 副菜：緑系 */
+        font-weight: bold;
+      }
 
       @media (max-width: 600px) {
         .input-area {
@@ -190,8 +199,18 @@
             }
           );
           const data = await response.json();
-          result.textContent =
-            data.reply || "メニューが思いつかなかったみたい…😢";
+          const rawReply = data.reply || "メニューが思いつかなかったみたい…😢";
+
+          const highlightedReply = rawReply
+            .replace(
+              /【主菜】/g,
+              '<span class="highlight-main">【主菜】</span>'
+            )
+            .replace(
+              /【副菜】/g,
+              '<span class="highlight-side">【副菜】</span>'
+            );
+          result.innerHTML = highlightedReply;
         } catch (error) {
           result.textContent = "エラーが発生しました🥲";
         }
