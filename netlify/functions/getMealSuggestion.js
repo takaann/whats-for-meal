@@ -56,10 +56,9 @@ exports.handler = async function (event) {
 
   if (allergies && Array.isArray(allergies) && allergies.length > 0) {
     systemPrompt += `
-- 以下のアレルゲンを一切含まないようにしてください：${allergies.join("、")}
-- これらのアレルゲンは重度のアレルギー症状を引き起こす可能性があるため、調味料や隠し材料を含めて絶対に使用しないこと
-- 卵、乳、小麦などが原材料に含まれる加工食品も含め、対象アレルゲンを含む食材は使用禁止
-`;
+- 指定されたアレルゲンを含む料理は絶対に提案しないでください。
+- ただし、条件が厳しくてレシピが思いつかない場合は、条件を守りつつ可能な限り近い提案を行ってください。
+- レシピが出せないからといって沈黙したり、エラーで返すことのないようにしてください。`;
   }
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
