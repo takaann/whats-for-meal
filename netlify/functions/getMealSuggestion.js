@@ -2,7 +2,7 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 exports.handler = async function (event) {
-  const { userInput, calorieLimit, allergies = [] } = JSON.parse(event.body);
+  const { userInput, calorieLimit, allergies = []} = JSON.parse(event.body);
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -12,6 +12,7 @@ exports.handler = async function (event) {
     };
   }
 
+  // 📌 ベースプロンプト
   let systemPrompt = `
 あなたは料理の専門家AIです。ユーザーの食材や気分に基づき、【主菜】とそれに合う【副菜】のセットを1つずつ提案してください。
 
@@ -63,6 +64,7 @@ exports.handler = async function (event) {
 `;
   }
 
+  // 🔍 材料欄だけ抽出してアレルゲンを検出
   const extractIngredients = (text) => {
     const matches = [...text.matchAll(/【材料】([\s\S]*?)【レシピ】/g)];
     return matches.map((m) => m[1]).join("\n").toLowerCase();
@@ -88,9 +90,8 @@ exports.handler = async function (event) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4-turbo",
+        model: "gpt-3.5-turbo",
         temperature: 0.3,
-        max_tokens: 1000, // ←ここ追加
         messages: [
           {
             role: "system",
