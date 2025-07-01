@@ -90,7 +90,7 @@ exports.handler = async function (event) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4-turbo",
         temperature: 0.3,
         messages: [
           {
