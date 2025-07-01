@@ -90,7 +90,7 @@ exports.handler = async function (event) {
       body: JSON.stringify({
         model: "gpt-4-turbo",
         temperature: 0.3,
-        max_tokens: 300, // ←ここ追加
+        max_tokens: 1000, // ←ここ追加
         messages: [
           {
             role: "system",
