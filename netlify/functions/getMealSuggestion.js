@@ -12,6 +12,7 @@ exports.handler = async function (event) {
     };
   }
 
+  // 📌 ベースプロンプト
   let systemPrompt = `
 あなたは料理の専門家AIです。ユーザーの食材や気分に基づき、【主菜】とそれに合う【副菜】のセットを1つずつ提案してください。
 
@@ -60,8 +61,27 @@ exports.handler = async function (event) {
 【アレルゲン制約】
 - 以下のアレルゲンを含む食材を一切使用しないこと：${allergensList}
 - 提案文の**最初の一文目**に必ず「特定のアレルゲン（${allergensList}）を除外しました。」と書くこと。絶対に省略してはいけません。
-- これはルールです。ルール違反の回答は無効とみなします。`;
+- これはルールです。ルール違反の回答は無効とみなします。
+`;
   }
+
+  // 🔍 材料欄だけ抽出してアレルゲンを検出
+  const extractIngredients = (text) => {
+    const matches = [...text.matchAll(/【材料】([\s\S]*?)【レシピ】/g)];
+    return matches.map((m) => m[1]).join("\n").toLowerCase();
+  };
+
+  const containsAllergen = (text, allergens) => {
+    const ingredients = extractIngredients(text);
+    return allergens?.some((a) =>
+      ingredients.includes(a.toLowerCase())
+    );
+  };
+
+  const startsWithAllergenNotice = (text, allergens) => {
+    const expected = `特定のアレルゲン（${allergens.join("、")}）を除外しました。`;
+    return text.trim().startsWith(expected);
+  };
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -71,7 +91,7 @@ exports.handler = async function (event) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         temperature: 0.3,
         messages: [
           {
@@ -99,13 +119,6 @@ exports.handler = async function (event) {
 
     const content = data.choices?.[0]?.message?.content;
 
-    // 🚨 出力にアレルゲンが含まれていたら弾く（後処理）
-    const containsAllergen = (text, allergens) => {
-      return allergens?.some((a) =>
-        text.toLowerCase().includes(a.toLowerCase())
-      );
-    };
-
     if (!content || typeof content !== "string" || content.trim() === "") {
       return {
         statusCode: 200,
@@ -113,13 +126,26 @@ exports.handler = async function (event) {
           reply: "条件が厳しくて、レシピが見つからなかったみたい…😢 入力内容をもう一度見直してみてね。",
         }),
       };
-    } else if (containsAllergen(content, allergies)) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          reply: "アレルゲンが含まれてしまったレシピが生成されたため、出力をキャンセルしました。もう一度お試しください。",
-        }),
-      };
+    }
+
+    if (allergies.length > 0) {
+      if (!startsWithAllergenNotice(content, allergies)) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            reply: "アレルゲン除外の明記が出力されていなかったため、生成を中止しました。もう一度お試しください。",
+          }),
+        };
+      }
+
+      if (containsAllergen(content, allergies)) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            reply: "アレルゲンが含まれてしまったレシピが生成されたため、出力をキャンセルしました。もう一度お試しください。",
+          }),
+        };
+      }
     }
 
     return {
