@@ -2,7 +2,7 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 exports.handler = async function (event) {
-  const { userInput, calorieLimit, allergies = []} = JSON.parse(event.body);
+  const { userInput, calorieLimit, allergies = [] } = JSON.parse(event.body);
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -12,7 +12,6 @@ exports.handler = async function (event) {
     };
   }
 
-  // 📌 ベースプロンプト
   let systemPrompt = `
 あなたは料理の専門家AIです。ユーザーの食材や気分に基づき、【主菜】とそれに合う【副菜】のセットを1つずつ提案してください。
 
@@ -51,7 +50,7 @@ exports.handler = async function (event) {
     systemPrompt += `\n- 合計カロリーはできるだけ${calorieLimit}kcal以内に抑えること`;
   }
 
-  if (allergies && Array.isArray(allergies) && allergies.length > 0) {
+  if (allergies.length > 0) {
     const allergensList = allergies.join("、");
     systemPrompt += `
 【アレルゲン情報】
@@ -64,7 +63,7 @@ exports.handler = async function (event) {
 `;
   }
 
-  // 🔍 材料欄だけ抽出してアレルゲンを検出
+  // レシピ内にアレルゲンが含まれていないかチェック
   const extractIngredients = (text) => {
     const matches = [...text.matchAll(/【材料】([\s\S]*?)【レシピ】/g)];
     return matches.map((m) => m[1]).join("\n").toLowerCase();
@@ -72,9 +71,7 @@ exports.handler = async function (event) {
 
   const containsAllergen = (text, allergens) => {
     const ingredients = extractIngredients(text);
-    return allergens?.some((a) =>
-      ingredients.includes(a.toLowerCase())
-    );
+    return allergens?.some((a) => ingredients.includes(a.toLowerCase()));
   };
 
   const startsWithAllergenNotice = (text, allergens) => {
@@ -92,15 +89,10 @@ exports.handler = async function (event) {
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
         temperature: 0.3,
+        max_tokens: 1000,
         messages: [
-          {
-            role: "system",
-            content: systemPrompt,
-          },
-          {
-            role: "user",
-            content: userInput,
-          },
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userInput },
         ],
       }),
     });
