@@ -3,6 +3,9 @@ async function suggestMeal() {
   // ユーザーの入力欄から値を取得
   const input = document.getElementById("userInput").value;
   const calorie = document.getElementById("calorieInput").value;
+  const selectedAllergies = Array.from(
+  document.querySelectorAll('input[name="allergy"]:checked')
+).map((checkbox) => checkbox.value);
   // 結果表示用のDOM要素を取得
   const result = document.getElementById("result");
   // 検索ボタンのDOM要素を取得
@@ -24,7 +27,7 @@ async function suggestMeal() {
     const response = await fetch("/.netlify/functions/getMealSuggestion", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userInput: input, calorieLimit: calorie }), // 入力データをJSON形式で送信
+      body: JSON.stringify({ userInput: input, calorieLimit: calorie , allergies: selectedAllergies}), // 入力データをJSON形式で送信
     });
 
     // 応答をJSONとしてパース

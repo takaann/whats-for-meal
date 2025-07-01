@@ -2,7 +2,7 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 exports.handler = async function (event) {
-  const { userInput, calorieLimit, allergies } = JSON.parse(event.body);
+  const { userInput, calorieLimit, allergies = []} = JSON.parse(event.body);
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
